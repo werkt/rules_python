@@ -90,6 +90,9 @@ parser.add_argument('--name', action='store',
 parser.add_argument('--input', action='store',
                     help=('The requirements.txt file to import.'))
 
+parser.add_argument('--index_url', action='store',
+                    help=('The --index-url for the install.'))
+
 parser.add_argument('--output', action='store',
                     help=('The requirements.bzl file to export.'))
 
@@ -154,7 +157,10 @@ def main():
   args = parser.parse_args()
 
   # https://github.com/pypa/pip/blob/9.0.1/pip/__init__.py#L209
-  if pip_main(["wheel", "-w", args.directory, "-r", args.input]):
+  index_url = []
+  if args.index_url:
+    index_url = ["-i", args.index_url]
+  if pip_main(["wheel", "-w", args.directory, "-r", args.input] + index_url):
     sys.exit(1)
 
   # Enumerate the .whl files we downloaded.

@@ -34,6 +34,8 @@ def _pip_import_impl(repository_ctx):
         repository_ctx.path("requirements.bzl"),
         "--directory",
         repository_ctx.path(""),
+        "--index-url",
+        repository_ctx.attr.index_url,
     ])
 
     if result.return_code:
@@ -45,6 +47,7 @@ pip_import = repository_rule(
             mandatory = True,
             allow_single_file = True,
         ),
+        "index_url": attr.string(),
         "_script": attr.label(
             executable = True,
             default = Label("//tools:piptool.par"),
